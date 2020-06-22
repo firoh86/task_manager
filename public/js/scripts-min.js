@@ -1,0 +1,1 @@
+"use strict";var form=document.getElementById("form"),task=document.getElementById("task"),formButton=document.getElementById("form__button");form.addEventListener("submit",(function(t){t.preventDefault()})),formButton.addEventListener("click",(function(t){console.log("se ha pulsado el boton")}));
