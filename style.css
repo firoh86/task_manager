@@ -1,0 +1,21 @@
+body {
+  background-color: rgb(31, 31, 31);
+}
+
+.formulary {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 2rem;
+  padding: 1rem;
+  box-sizing: content-box;
+  color: white;
+  width: 40vw;
+  border-radius: 5px;
+  background-color: rgb(45, 48, 53);
+}
+.formulary__bloque {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
