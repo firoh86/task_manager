@@ -14,39 +14,25 @@
     <div class="container">
       <div class="header">
         <div class="clear" id="clear">
+          <p>Reset list</p>
           <i class="fas fa-sync-alt fa-2x"></i>
         </div>
-        <div id="date"></div>
       </div>
-      <div class="add-item">
-        <i class="fas fa-plus-circle fa-1x"></i>
-        <input type="text" id="input" placeholder="Add a to-do" />
-        <input type="datetime-local" id="input" placeholder="time left" />
+      <div class="add-item"  id="add-item"  data-color="">
+        <button id="addToDo" class="addToDo">
+          <i class="fas fa-plus-circle fa-2x addicon"></i>
+        </button>
+        <input type="text" id="mensaje" placeholder="Add a to-do" />
+        <input type="datetime-local" id="fecha" placeholder="time left" />
         <div class="select">
-          <button></button>
-          <button></button>
-          <button></button>
-          <button></button>
+          <button id="green" class="green button"></button>
+          <button id="yellow" class="yellow button"></button>
+          <button id="orange" class="orange button"></button>
+          <button id="red" class="red button"></button>
         </div>
       </div>
       <class class="content">
-        <ul id="list" class="list">
-          <li class="item">
-            <div class="item__block">
-              <i class="far fa-circle"></i>
-              <i class="fas fa-circle complete"></i>
-              <p class="text complete">Drink coffee</p>
-            </div>
-            <i class="far fa-trash-alt"></i>
-          </li>
-          <li class="item">
-            <div class="item__block">
-              <i class="far fa-circle"></i>
-              <i class="fas fa-circle complete"></i>
-              <p class="text complete">Drink coffee</p>
-            </div>
-            <i class="far fa-trash-alt"></i>
-          </li>
+        <ul id="list" class="list">         
         </ul>
       </div>
     </div>
