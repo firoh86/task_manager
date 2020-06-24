@@ -1,18 +1,95 @@
-.form {
+.container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  width: 30vw;
   margin: 0 auto;
-  margin-top: 2rem;
-  padding: 1rem;
+  margin-top: 4em;
+  background-color: #333;
+  border-radius: 10px 10px 0 0;
+}
+.header {
   box-sizing: content-box;
-  color: white;
-  width: 40vw;
-  border-radius: 5px;
-  background-color: rgb(45, 48, 53);
-
-  &__block {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 4em;
+  background-color: #47b2f5;
+  border-radius: 10px 10px 0 0;
+}
+.clear {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.list {
+  padding-left: 0;
+}
+.item {
+  padding: 0.4em 0.6em;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #47b2f5;
+}
+.text {
+  margin: 0;
+  padding: 0;
+}
+.add-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #47b2f5;
+  padding: 1em;
+}
+.add-item :first-child {
+  color: #47b2f5;
+}
+.item__block {
+  display: flex;
+  align-items: center;
+  & i {
+    margin-right: 0.4em;
   }
+}
+.add-item input {
+  padding: 0.2em;
+  margin: 0 0.4em;
+  border-radius: 8px;
+  border: none;
+  width: 50%;
+  height: 1em;
+}
+.complete {
+  color: lightgreen;
+  text-decoration: line-through;
+}
+.select {
+  display: flex;
+  width: auto;
+}
+.select button {
+  height: 1.5em;
+  width: 1.5em;
+  border: none;
+  margin: 1px;
+  border-radius: 50%;
+  outline: none;
+  &:hover {
+    transform: scale(0.95);
+    border: 2px solid black;
+  }
+  &:nth-child(4) {
+    background-color: red;
+  }
+  &:nth-child(3) {
+    background-color: orangered;
+  }
+  &:nth-child(2) {
+    background-color: yellow;
+  }
+  &:nth-child(1) {
+    background-color: lightgreen;
+  }
+}
+.fa-trash-alt {
+  color: red;
 }

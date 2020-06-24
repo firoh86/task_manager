@@ -1,13 +1,18 @@
-const form = document.getElementById('form');
-const task = document.getElementById('task');
-const formButton = document.getElementById('form__button');
+const clear = document.getElementById('clear');
+const dataelement = document.getElementById('date');
+const list = document.getElementById('list');
+const input = document.getElementById('input');
 
-// declaraciones, lógica y eventos.
+date.textContent = new Date().toLocaleString();
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
+// -------------------------------
+window.addEventListener('DOMContentLoaded', () => {
+  // traes lo que haya en el LS
+  console.log('se ha cargado la página');
 });
 
-formButton.addEventListener('click', (e) => {
-  console.log('se ha pulsado el boton');
+document.addEventListener('keyup', (e) => {
+  if (e.keyCode === 13) {
+    window.location.reload();
+  }
 });
