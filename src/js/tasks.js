@@ -19,19 +19,37 @@ clear.addEventListener('click', (e) => {
   }
   localStorage.clear();
 });
-// evento click de tareas completas
 
+// borrar elementos de una lista
+let deleteIcons = [];
+const updateDelete = () => {
+  deleteIcons = document.querySelectorAll('ul.list > li >i.fa-trash-alt');
+  // console.log(deleteIcons);
+  for (let child of deleteIcons) {
+    child.addEventListener('click', (e) => {
+      let hijo = e.target;
+      let uid = hijo.parentNode.dataset.uid;
+      console.log(uid);
+      // borrar del localstorage
+      localStorage.removeItem(uid);
+      list.removeChild(hijo.parentNode);
+      // borrar parent node
+    });
+  }
+};
+
+// evento click de tareas completas
 let completeRadius = [];
 const updateChilds = () => {
   // llamar a update childs cuando se cree o se borren elementos de la lista
   completeRadius = document.querySelectorAll('ul.list > li >div>i.fa-circle');
-  console.log(completeRadius);
+  // console.log(completeRadius);
 
   // cambio de clases si se completa la tarea
   for (let child of completeRadius) {
     child.addEventListener('click', (e) => {
       let hijo = e.target;
-      console.log(hijo.className);
+      // console.log(hijo.className);
       switch (hijo.className) {
         case 'fas fa-circle complete':
           hijo.classList.replace('fas', 'far');
@@ -47,12 +65,6 @@ const updateChilds = () => {
     });
   }
 };
-
-// -------------------------------
-window.addEventListener('DOMContentLoaded', () => {
-  // traes lo que haya en el LS
-  console.log('se ha cargado la página');
-});
 
 // cambio de color de additem
 b1.addEventListener('click', (e) => {
@@ -120,12 +132,19 @@ const addDataToLS = (data, uid) => {
   p1.classList.add('text');
   p1.textContent = data.mensaje;
 
+  let p2 = document.createElement('p');
+  p2.classList.add('text');
+  p2.textContent = data.fecha;
+
   // trash icon
   let icon2 = document.createElement('i');
   icon2.classList.add('far', 'fa-trash-alt');
 
+  let fecha = document.createElement('p');
+
   div1.appendChild(icon);
   div1.appendChild(p1);
+  div1.appendChild(p2);
   li1.appendChild(div1);
   li1.appendChild(icon2);
 
@@ -141,12 +160,18 @@ const addDataToLS = (data, uid) => {
   additem.dataset.color = '';
   // falta completar tareas y borrar tareas
   // completar tareas con class complete
-  //-------actualiza hijos de la lista--------
+  //-------actualiza botones hijos de la lista--------
   updateChilds();
+  updateDelete();
 };
 
 /* document.addEventListener('keyup', (e) => {
   if (e.keyCode === 13) {
     window.location.reload();
   }
+}); */
+
+/* window.addEventListener('DOMContentLoaded', () => {
+  // traes lo que haya en el LS
+  console.log('se ha cargado la página');
 }); */
