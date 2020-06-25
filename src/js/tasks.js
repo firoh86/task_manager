@@ -19,6 +19,34 @@ clear.addEventListener('click', (e) => {
   }
   localStorage.clear();
 });
+// evento click de tareas completas
+
+let completeRadius = [];
+const updateChilds = () => {
+  // llamar a update childs cuando se cree o se borren elementos de la lista
+  completeRadius = document.querySelectorAll('ul.list > li >div>i.fa-circle');
+  console.log(completeRadius);
+
+  // cambio de clases si se completa la tarea
+  for (let child of completeRadius) {
+    child.addEventListener('click', (e) => {
+      let hijo = e.target;
+      console.log(hijo.className);
+      switch (hijo.className) {
+        case 'fas fa-circle complete':
+          hijo.classList.replace('fas', 'far');
+          break;
+        case 'far fa-circle':
+          hijo.classList.replace('far', 'fas');
+          break;
+        default:
+          break;
+      }
+      hijo.classList.toggle('complete');
+      hijo.nextSibling.classList.toggle('complete');
+    });
+  }
+};
 
 // -------------------------------
 window.addEventListener('DOMContentLoaded', () => {
@@ -44,6 +72,7 @@ b4.addEventListener('click', (e) => {
   additem.dataset.color = 'red';
 });
 
+// formulario
 addbutton.addEventListener('click', (e) => {
   // color por default verde si no asignaste uno
   if (additem.getAttribute('data-color') === '') {
@@ -67,6 +96,7 @@ addbutton.addEventListener('click', (e) => {
   }
 });
 
+// añade elementos a la lista
 const addDataToLS = (data, uid) => {
   console.log();
   // to localstorage
@@ -111,6 +141,8 @@ const addDataToLS = (data, uid) => {
   additem.dataset.color = '';
   // falta completar tareas y borrar tareas
   // completar tareas con class complete
+  //-------actualiza hijos de la lista--------
+  updateChilds();
 };
 
 /* document.addEventListener('keyup', (e) => {
