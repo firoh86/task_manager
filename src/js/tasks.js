@@ -1,5 +1,6 @@
 const clear = document.getElementById('clear');
 const list = document.getElementById('list');
+const select = document.getElementById('select');
 // -------------color buttons----------------------------------
 const b1 = document.getElementById('green');
 const b2 = document.getElementById('yellow');
@@ -11,91 +12,12 @@ const mensaje = document.getElementById('mensaje');
 const fecha = document.getElementById('fecha');
 const addbutton = document.getElementById('addToDo');
 
-// date.textContent = new Date().toLocaleString();
 // reset remueve todos los hijos de la lista
 clear.addEventListener('click', (e) => {
   while (list.firstChild) {
     list.removeChild(list.firstChild);
   }
   localStorage.clear();
-});
-
-// borrar elementos de una lista
-let deleteIcons = [];
-const updateDelete = () => {
-  deleteIcons = document.querySelectorAll('ul.list > li >i.fa-trash-alt');
-  // console.log(deleteIcons);
-  for (let child of deleteIcons) {
-    child.addEventListener('click', (e) => {
-      let hijo = e.target;
-      let uid = hijo.parentNode.dataset.uid;
-      console.log(uid);
-      // borrar del localstorage
-      localStorage.removeItem(uid);
-      list.removeChild(hijo.parentNode);
-      // borrar parent node
-    });
-  }
-};
-
-// evento click de tareas completas actualiza estado en local storage
-let completeRadius = [];
-const updateChilds = () => {
-  // llamar a update childs cuando se cree o se borren elementos de la lista
-  completeRadius = document.querySelectorAll('ul.list > li >div>i.fa-circle');
-  // cambio de clases si se completa la tarea
-  for (let child of completeRadius) {
-    child.addEventListener('click', (e) => {
-      let hijo = e.target;
-      let uid = hijo.parentNode.parentNode.dataset.uid;
-      // console.log(uid);
-      // console.log(hijo.className);
-      switch (hijo.className) {
-        case 'fas fa-circle complete':
-          hijo.classList.replace('fas', 'far');
-
-          let lastState = JSON.parse(localStorage.getItem(uid));
-          // console.log(lastState);
-          lastState.done = false;
-          let newvalue = JSON.stringify(lastState);
-          localStorage.setItem(uid, newvalue);
-
-          break;
-        case 'far fa-circle':
-          hijo.classList.replace('far', 'fas');
-
-          let lastState = JSON.parse(localStorage.getItem(uid));
-          // console.log(lastState);
-          lastState.done = true;
-          let newvalue = JSON.stringify(lastState);
-          localStorage.setItem(uid, newvalue);
-
-          break;
-        default:
-          break;
-      }
-      hijo.classList.toggle('complete');
-      hijo.nextSibling.classList.toggle('complete');
-    });
-  }
-};
-
-// cambio de color de additem
-b1.addEventListener('click', (e) => {
-  additem.className = 'add-item green';
-  additem.dataset.color = 'green';
-});
-b2.addEventListener('click', (e) => {
-  additem.className = 'add-item yellow';
-  additem.dataset.color = 'yellow';
-});
-b3.addEventListener('click', (e) => {
-  additem.className = ' add-item orange';
-  additem.dataset.color = 'orange';
-});
-b4.addEventListener('click', (e) => {
-  additem.className = ' add-item red';
-  additem.dataset.color = 'red';
 });
 
 // formulario
@@ -108,11 +30,11 @@ addbutton.addEventListener('click', (e) => {
   if (mensaje.value !== '' && fecha.value !== '') {
     var uniq = 'id' + new Date().getTime();
     let data = {
-      mensaje: mensaje.value,
-      fecha: fecha.value,
-      done: false,
       color: additem.dataset.color,
+      done: false,
+      fecha: fecha.value,
       id: uniq,
+      mensaje: mensaje.value,
     };
     console.log(data);
     // mandas al localstorage
@@ -124,7 +46,6 @@ addbutton.addEventListener('click', (e) => {
 
 // añade elementos a la lista
 const addDataToLS = (data, uid) => {
-  console.log();
   // to localstorage
   localStorage.setItem(uid, JSON.stringify(data));
 
@@ -172,42 +93,63 @@ const addDataToLS = (data, uid) => {
   fecha.value = '';
   additem.className = 'add-item ';
   additem.dataset.color = '';
-  //-------actualiza botones hijos de la lista completar y borrar--------
-  updateChilds();
-  updateDelete();
 };
 
+// controlador de botones en lista
+list.addEventListener('click', (e) => {
+  if (e.target.tagName == 'I') {
+    if (e.target.classList.contains('fa-circle')) taskComplete(e.target);
+  }
+  if (e.target.classList.contains('fa-trash-alt')) {
+    deleteTask(e.target);
+  }
+});
+
+const taskComplete = (hijo) => {
+  hijo.classList.contains('far')
+    ? hijo.classList.replace('far', 'fas')
+    : hijo.classList.replace('fas', 'far');
+  hijo.classList.toggle('complete');
+  hijo.nextSibling.classList.toggle('complete');
+  // actualiza tarea en local storage
+  let uid = hijo.parentNode.parentNode.dataset.uid;
+  let lastState = JSON.parse(localStorage.getItem(uid));
+  console.log(lastState);
+  lastState.done == false ? (lastState.done = true) : (lastState.done = false);
+  let newvalue = JSON.stringify(lastState);
+  localStorage.setItem(uid, newvalue);
+};
+
+const deleteTask = (hijo) => {
+  let uid = hijo.parentNode.dataset.uid;
+  // borrar del localstorage
+  localStorage.removeItem(uid);
+  list.removeChild(hijo.parentNode);
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('se ha cargado la página');
+  let values = Object.values(localStorage);
+  for (let element in values) {
+    let instance = JSON.parse(values[element]);
+    addDataToLS(instance, instance.id);
+  }
+  // console.log(values);
+  // llama a la cuenta regresiva para actualizar al iniciar la app
+});
+
+// colores
+select.addEventListener('click', (e) => {
+  console.log(e.target.id);
+  additem.className = `add-item ${e.target.id}`;
+  additem.dataset.color = e.target.id;
+});
+
+// cuentas regresivas
+
 /* document.addEventListener('keyup', (e) => {
-  if (e.keyCode === '32') {
+  if (e.keyCode == '32') {
     window.location.reload();
     console.log('se ha pulsado');
   }
 }); */
-
-// --------------arreglar el gulp file y crear la lista desde el local storage al cargar la pagina
-window.addEventListener('DOMContentLoaded', () => {
-  // traes lo que haya en el LS
-  console.log('se ha cargado la página');
-  const LS = allStorage();
-  // console.log(LS);
-  for (let child of LS) {
-    let objeto = JSON.parse(child);
-    let uid = objeto.id;
-    console.log('llega');
-    // addDataToLS(child, uid);
-  }
-  console.log('llega');
-});
-
-// trae todo el contenido de local storage
-const allStorage = () => {
-  let values = [],
-    keys = Object.keys(localStorage),
-    i = keys.length;
-
-  while (i--) {
-    values.push(localStorage.getItem(keys[i]));
-  }
-
-  return values;
-};
