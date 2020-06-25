@@ -38,24 +38,38 @@ const updateDelete = () => {
   }
 };
 
-// evento click de tareas completas
+// evento click de tareas completas actualiza estado en local storage
 let completeRadius = [];
 const updateChilds = () => {
   // llamar a update childs cuando se cree o se borren elementos de la lista
   completeRadius = document.querySelectorAll('ul.list > li >div>i.fa-circle');
-  // console.log(completeRadius);
-
   // cambio de clases si se completa la tarea
   for (let child of completeRadius) {
     child.addEventListener('click', (e) => {
       let hijo = e.target;
+      let uid = hijo.parentNode.parentNode.dataset.uid;
+      // console.log(uid);
       // console.log(hijo.className);
       switch (hijo.className) {
         case 'fas fa-circle complete':
           hijo.classList.replace('fas', 'far');
+
+          let lastState = JSON.parse(localStorage.getItem(uid));
+          // console.log(lastState);
+          lastState.done = false;
+          let newvalue = JSON.stringify(lastState);
+          localStorage.setItem(uid, newvalue);
+
           break;
         case 'far fa-circle':
           hijo.classList.replace('far', 'fas');
+
+          let lastState = JSON.parse(localStorage.getItem(uid));
+          // console.log(lastState);
+          lastState.done = true;
+          let newvalue = JSON.stringify(lastState);
+          localStorage.setItem(uid, newvalue);
+
           break;
         default:
           break;
@@ -158,20 +172,42 @@ const addDataToLS = (data, uid) => {
   fecha.value = '';
   additem.className = 'add-item ';
   additem.dataset.color = '';
-  // falta completar tareas y borrar tareas
-  // completar tareas con class complete
-  //-------actualiza botones hijos de la lista--------
+  //-------actualiza botones hijos de la lista completar y borrar--------
   updateChilds();
   updateDelete();
 };
 
 /* document.addEventListener('keyup', (e) => {
-  if (e.keyCode === 13) {
+  if (e.keyCode === '32') {
     window.location.reload();
+    console.log('se ha pulsado');
   }
 }); */
 
-/* window.addEventListener('DOMContentLoaded', () => {
+// --------------arreglar el gulp file y crear la lista desde el local storage al cargar la pagina
+window.addEventListener('DOMContentLoaded', () => {
   // traes lo que haya en el LS
   console.log('se ha cargado la página');
-}); */
+  const LS = allStorage();
+  // console.log(LS);
+  for (let child of LS) {
+    let objeto = JSON.parse(child);
+    let uid = objeto.id;
+    console.log('llega');
+    // addDataToLS(child, uid);
+  }
+  console.log('llega');
+});
+
+// trae todo el contenido de local storage
+const allStorage = () => {
+  let values = [],
+    keys = Object.keys(localStorage),
+    i = keys.length;
+
+  while (i--) {
+    values.push(localStorage.getItem(keys[i]));
+  }
+
+  return values;
+};
