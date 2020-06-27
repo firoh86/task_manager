@@ -14,13 +14,16 @@ Cada elemento de la lista cuenta con su cuenta regresiva individual, que se para
 Y que limpia el intervalo en cuyo caso de que se haya terminado el tiempo o se borre la tarea.
 
 VOLCADO EN LOCALSTORAGE:  
-  La app cuenta con un volcado de datos con id unico en local storage.
+ La app cuenta con un volcado de datos con id unico en local storage.
 Cada vez que se crea una tarea, automaticamente se vuelva en LS.
 Cuando la aplicación recarga o vuelve a abrirse, toma el volcado de LS
 para autorellenarse con las tareas que se habian creado anteriormente.
 
 PUNTOS DE CONTROL:  
-  Se establecen puntos de control para el usuario:
+ Se establecen puntos de control para el usuario:
 Los campos de nombre de la tarea y fecha no pueden estar vacios.
 El campo de fecha debe ser posterior al momento actual.
 Se asignará un color de prioridad baja si el usuario no ha seleccionado uno especifico.
+
+para ver el proyecto solo abrir index.html (public).
+Para realizar modificaciones clonar el proyecto, hacer npm i y ejecutarlo con gulp desde la consola.
