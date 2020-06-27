@@ -1,11 +1,7 @@
 const clear = document.getElementById('clear');
 const list = document.getElementById('list');
 const select = document.getElementById('select');
-// -------------color buttons----------------------------------
-const b1 = document.getElementById('green');
-const b2 = document.getElementById('yellow');
-const b3 = document.getElementById('orange');
-const b4 = document.getElementById('red');
+
 // --------------------info to past throw-----------------------
 const additem = document.getElementById('add-item');
 const mensaje = document.getElementById('mensaje');
@@ -26,21 +22,25 @@ addbutton.addEventListener('click', (e) => {
   if (additem.getAttribute('data-color') === '') {
     additem.dataset.color = 'green';
   }
-
-  if (mensaje.value !== '' && fecha.value !== '') {
-    var uniq = 'id' + new Date().getTime();
-    let data = {
-      color: additem.dataset.color,
-      done: false,
-      fecha: fecha.value,
-      id: uniq,
-      mensaje: mensaje.value,
-    };
-    console.log(data);
-    // mandas al localstorage
-    addDataToLS(data, uniq);
+  // comprobar que la fecha es a futuro
+  if (new Date(fecha.value).getTime() < new Date().getTime()) {
+    alert('la fecha esta pasada');
   } else {
-    alert('rellena los campos de fecha y mensaje');
+    if (mensaje.value !== '' && fecha.value !== '') {
+      var uniq = 'id' + new Date().getTime();
+      let data = {
+        color: additem.dataset.color,
+        done: false,
+        fecha: fecha.value,
+        id: uniq,
+        mensaje: mensaje.value,
+      };
+      // console.log(data);
+      // mandas al localstorage
+      addDataToLS(data, uniq);
+    } else {
+      alert('rellena los campos de fecha y mensaje');
+    }
   }
 });
 
@@ -51,8 +51,8 @@ const addDataToLS = (data, uid) => {
 
   // to the app (añades el uid al LI)
   let docFragment = document.createDocumentFragment();
-
   let li1 = document.createElement('li');
+
   li1.classList.add('item');
   li1.classList.add(data.color);
   li1.dataset.uid = uid;
@@ -67,24 +67,45 @@ const addDataToLS = (data, uid) => {
   p1.classList.add('text');
   p1.textContent = data.mensaje;
 
-  let p2 = document.createElement('p');
-  p2.classList.add('text');
-  p2.textContent = data.fecha;
-
   // trash icon
   let icon2 = document.createElement('i');
   icon2.classList.add('far', 'fa-trash-alt');
 
-  let fecha = document.createElement('p');
-
   div1.appendChild(icon);
   div1.appendChild(p1);
-  div1.appendChild(p2);
+
+  let p2 = document.createElement('p');
+  // interval-------cuenta regresiva------------
+  let interval = setInterval((uid) => {
+    let lastchild = '';
+    if (lastchild == '') {
+      lastchild = list.querySelector('li:last-child');
+    }
+
+    if (lastchild === null) {
+      clearInterval(interval);
+      console.log('ya no existe');
+    }
+
+    p2.textContent = '';
+    p2.classList.add('text');
+    p2.classList.add('fecha');
+    let reloj = muestraReloj(data.fecha);
+    let relojActual;
+    if (reloj.remainTime > 0) {
+      relojActual = `DL D-${reloj.remainDays} ${reloj.remainHours}:${reloj.remainMinutes}:${reloj.remainSeconds}`;
+    } else {
+      relojActual = 'deadline past';
+      clearInterval(interval);
+    }
+    p2.textContent = relojActual;
+    div1.appendChild(p2);
+  }, 1000);
+
   li1.appendChild(div1);
   li1.appendChild(icon2);
 
   docFragment.appendChild(li1);
-
   list.appendChild(docFragment);
 
   // reset de values
@@ -114,7 +135,7 @@ const taskComplete = (hijo) => {
   // actualiza tarea en local storage
   let uid = hijo.parentNode.parentNode.dataset.uid;
   let lastState = JSON.parse(localStorage.getItem(uid));
-  console.log(lastState);
+  // console.log(lastState);
   lastState.done == false ? (lastState.done = true) : (lastState.done = false);
   let newvalue = JSON.stringify(lastState);
   localStorage.setItem(uid, newvalue);
@@ -127,29 +148,42 @@ const deleteTask = (hijo) => {
   list.removeChild(hijo.parentNode);
 };
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('se ha cargado la página');
-  let values = Object.values(localStorage);
-  for (let element in values) {
-    let instance = JSON.parse(values[element]);
-    addDataToLS(instance, instance.id);
-  }
-  // console.log(values);
-  // llama a la cuenta regresiva para actualizar al iniciar la app
-});
-
 // colores
 select.addEventListener('click', (e) => {
-  console.log(e.target.id);
+  // console.log(e.target.id);
   additem.className = `add-item ${e.target.id}`;
   additem.dataset.color = e.target.id;
 });
 
-// cuentas regresivas
-
-/* document.addEventListener('keyup', (e) => {
-  if (e.keyCode == '32') {
-    window.location.reload();
-    console.log('se ha pulsado');
+window.onload = () => {
+  list.textContent = '';
+  console.log('se ha cargado la página');
+  let values = Object.values(localStorage);
+  let fechas = [];
+  let uids = [];
+  for (let element in values) {
+    let instance = JSON.parse(values[element]);
+    fechas.push(instance.fecha);
+    uids.push(instance.id);
+    addDataToLS(instance, instance.id);
   }
-}); */
+};
+
+const muestraReloj = (fecha) => {
+  const now = new Date();
+  const remainTime = (new Date(fecha) - now + 1000) / 1000;
+  const remainSeconds = ('0' + Math.floor(remainTime % 60)).slice(-2);
+  const remainMinutes = ('0' + Math.floor((remainTime / 60) % 60)).slice(-2);
+  const remainHours = ('0' + Math.floor((remainTime / 3600) % 24)).slice(-2);
+  const remainDays = Math.floor(remainTime / (3600 * 24));
+
+  // console.log(remainTime);
+
+  return {
+    remainSeconds,
+    remainMinutes,
+    remainHours,
+    remainDays,
+    remainTime,
+  };
+};
