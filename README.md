@@ -2,6 +2,13 @@
 
 El ejercicio se basa en crear una lista de tareas en JS vanilla.
 
+Requisitos:
+El ejercicio debe estar realizado en js Vanilla, Scss y compilado con Gulp.
+Esta práctica es una práctica conjunta de js y gulp, por los que estos requisitos se deben mantener.
+Puedes usar Pug si lo prefieres para acelerar la parte del html.
+
+-Realizado con html, Scss y js vanilla, compilado en Gulp.
+
 Creación de tareas, con prioridad basada en colores y una cuenta regresiva en base a una fecha de inserción.
 Cada elemento de la lista cuenta con su cuenta regresiva individual, que se para al llegar a 0 "deadline".
 Y que limpia el intervalo en cuyo caso de que se haya terminado el tiempo o se borre la tarea.
